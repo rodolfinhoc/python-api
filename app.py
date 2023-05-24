@@ -32,7 +32,7 @@ def login():
 
     if usuario_data and senha == usuario_data[3]:
         access_token = create_access_token(identity=usuario_data[0], expires_delta=False)
-        return jsonify({'access_token': access_token}), 200
+        return jsonify({'codigoUsuario': usuario_data[0], 'access_token': access_token}), 200
     else:
         return jsonify({'error': 'Usuário ou senha inválidos'}), 401
 
