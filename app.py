@@ -36,6 +36,28 @@ def login():
     else:
         return jsonify({'error': 'Usuário ou senha inválidos'}), 401
 
+# Rota para obter lembretes por usuário
+@app.route('/lembretes/<int:codigoUsuario>', methods=['GET'])
+@jwt_required()
+def get_lembretes_by_usuario(codigoUsuario):
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM tb_cad_lembretes WHERE codigo_usuario = %s', (codigoUsuario,))
+    lembretes = cursor.fetchall()
+    cursor.close()
+
+    lembretes_list = []
+    for lembrete in lembretes:
+        lembrete_data = {
+            'codigo': lembrete[0],
+            'codigoUsuario': lembrete[1],
+            'titulo': lembrete[2],
+            'descricao': lembrete[3],            
+            'data': lembrete[4],            
+            'criadoEm': lembrete[5]
+        }
+        lembretes_list.append(lembrete_data)
+
+    return jsonify({'lembretes': lembretes_list}), 200
 
 # Rota protegida, que requer autenticação
 @app.route('/protected', methods=['GET'])
