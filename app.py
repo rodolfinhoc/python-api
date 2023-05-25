@@ -52,12 +52,29 @@ def get_lembretes_by_usuario(codigoUsuario):
             'codigoUsuario': lembrete[1],
             'titulo': lembrete[2],
             'descricao': lembrete[3],
-            'data': lembrete[4].strftime('%d/%m/%Y - %H:%M:%S'),
+            'data': lembrete[4].strftime('%d/%m/%Y'),
             'criadoEm': lembrete[5].strftime('%d/%m/%Y - %H:%M:%S'),
         }
         lembretes_list.append(lembrete_data)
 
     return jsonify({'lembretes': lembretes_list}), 200
+
+# Rota para inserir lembrete
+@app.route('/lembretes', methods=['POST'])
+@jwt_required()
+def insert_lembrete():
+    codigoUsuario = request.json.get('codigoUsuario')
+    titulo = request.json.get('titulo')
+    descricao = request.json.get('descricao')
+    data = request.json.get('data')
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('INSERT INTO tb_cad_lembretes (codigo_usuario, titulo, descricao, data) VALUES (%s, %s, %s, %s)',
+                   (codigoUsuario, titulo, descricao, data))
+    mysql.connection.commit()
+    cursor.close()
+
+    return jsonify({'message': 'Lembrete inserido com sucesso'}), 200
 
 # Rota protegida, que requer autenticação
 @app.route('/protected', methods=['GET'])
