@@ -51,9 +51,9 @@ def get_lembretes_by_usuario(codigoUsuario):
             'codigo': lembrete[0],
             'codigoUsuario': lembrete[1],
             'titulo': lembrete[2],
-            'descricao': lembrete[3],            
-            'data': lembrete[4],            
-            'criadoEm': lembrete[5]
+            'descricao': lembrete[3],
+            'data': lembrete[4].strftime('%d/%m/%Y - %H:%M:%S'),
+            'criadoEm': lembrete[5].strftime('%d/%m/%Y - %H:%M:%S'),
         }
         lembretes_list.append(lembrete_data)
 
