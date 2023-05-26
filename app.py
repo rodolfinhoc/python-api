@@ -76,6 +76,18 @@ def insert_lembrete():
 
     return jsonify({'message': 'Lembrete inserido com sucesso'}), 200
 
+# Rota para deletar lembrete por ID
+@app.route('/lembretes/<int:codigoUsuario>/<int:codigoLembrete>', methods=['DELETE'])
+@jwt_required()
+def delete_lembrete(codigoUsuario, codigoLembrete):
+    cursor = mysql.connection.cursor()
+    cursor.execute('DELETE FROM tb_cad_lembretes WHERE codigo_usuario = %s AND codigo = %s', (codigoUsuario, codigoLembrete))
+    mysql.connection.commit()
+    cursor.close()
+
+    return jsonify({'message': 'Lembrete deletado com sucesso'}), 200
+
+
 # Rota protegida, que requer autenticação
 @app.route('/protected', methods=['GET'])
 @jwt_required()
